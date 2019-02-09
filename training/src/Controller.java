@@ -29,7 +29,7 @@ public class Controller {
 
     private void gameLogic(Scanner sc) {
 
-        while ((currentAnswer = sc.nextInt()) != model.getRightAnswer()) {
+        while ((currentAnswer = inputValue(sc)) != model.getRightAnswer()) {
             model.gameHistory(currentAnswer);
             if (currentAnswer > model.getMaxRange() || currentAnswer < model.getMinRange()) {
                 view.showMessage(view.WRONG_RANGE_MESSAGE);
@@ -47,6 +47,15 @@ public class Controller {
 
         view.showMessage(view.WINNING_MESSAGE + currentAnswer);
         model.gameHistory(currentAnswer);
+    }
+
+    private int inputValue(Scanner sc) {
+        while (!sc.hasNextInt()) {
+            view.showMessage(view.NOT_A_NUMBER_MESSAGE);
+            view.showMessage(view.INIT_MESSAGE + model.getMinRange() + " - " + model.getMaxRange());
+            sc.next();
+        }
+        return sc.nextInt();
     }
 
 }
