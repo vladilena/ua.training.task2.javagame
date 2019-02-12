@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Ushakova Vladlena
  * @since 09/02/2019
@@ -6,9 +9,9 @@
 public class Model {
     private int rightAnswer;
     private int minRange;
-    private int maxRange = 100;
-    private String answersHistory;
-    private StringBuilder builder = new StringBuilder();
+    private int maxRange;
+    List<Integer> gameHistory = new ArrayList<>();
+    String lessOrMore;
 
     public Model(int rightAnswer, int minRange, int maxRange) {
         this.rightAnswer = rightAnswer;
@@ -20,14 +23,31 @@ public class Model {
     public Model() {
     }
 
-
-    public void guessNumber() {
-        rightAnswer = (int) (Math.random() * 100);
+    //range is from 1 to 99
+    public void createRightAnswer() {
+        rightAnswer = (int) (Math.random() * (maxRange - minRange - 2) + minRange + 1);
     }
 
 
-    public void gameHistory(int currentAnswer) {
-        answersHistory = String.valueOf(builder.append(currentAnswer).append("; "));
+    public boolean gameLogic(int currentAnswer) {
+        saveGameHistory(currentAnswer);
+
+        boolean res = true;
+        if (currentAnswer == rightAnswer) {
+            res = false;
+        } else if (currentAnswer > rightAnswer) {
+            maxRange = currentAnswer;
+            lessOrMore = GlobalConstants.BIGGER_NUMBER;
+        } else {
+            minRange = currentAnswer;
+            lessOrMore = GlobalConstants.LESS_NUMBER;
+        }
+        return res;
+    }
+
+
+    public void saveGameHistory(int currentAnswer) {
+        gameHistory.add(currentAnswer);
     }
 
 
@@ -49,10 +69,6 @@ public class Model {
 
     public void setMaxRange(int maxRange) {
         this.maxRange = maxRange;
-    }
-
-    public String getAnswersHistory() {
-        return answersHistory;
     }
 
 }

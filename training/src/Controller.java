@@ -8,7 +8,6 @@ import java.util.Scanner;
 public class Controller {
     private Model model;
     private View view;
-    private int currentAnswer;
 
     public Controller() {
     }
@@ -20,44 +19,38 @@ public class Controller {
 
     public void runTheGame() {
         Scanner sc = new Scanner(System.in);
-        model.guessNumber();
-        view.showMessage(view.START_THE_GAME);
-        gameLogic(sc);
-        view.showMessage(view.HISTORY + model.getAnswersHistory());
-
+        view.showMessage(view.START_GAME);
+        model.setMinRange(GlobalConstants.INITIAL_MIN);
+        model.setMaxRange(GlobalConstants.INITIAL_MAX);
+        model.createRightAnswer();
+        while (model.gameLogic(checkInput(sc))) {
+            lessOrMoreMessage();
+        }
+        view.showMessage(view.WINNING_MESSAGE + view.SPACE_SIGN + model.getRightAnswer());
+        view.showMessage(view.HISTORY + view.SPACE_SIGN + model.gameHistory);
     }
 
-    private void gameLogic(Scanner sc) {
 
-        while ((currentAnswer = inputValue(sc)) != model.getRightAnswer()) {
-            model.gameHistory(currentAnswer);
-            if (currentAnswer > model.getMaxRange() || currentAnswer < model.getMinRange()) {
-                view.showMessage(view.WRONG_RANGE_MESSAGE);
-                view.showMessage(view.INIT_MESSAGE + model.getMinRange() + " - " + model.getMaxRange());
-            } else if (currentAnswer > model.getRightAnswer()) {
-                model.setMaxRange(currentAnswer);
-                view.showMessage(view.LESS_MESSAGE + currentAnswer);
-                view.showMessage(view.INIT_MESSAGE + model.getMinRange() + " - " + model.getMaxRange());
-            } else if (currentAnswer < model.getRightAnswer()) {
-                model.setMinRange(currentAnswer);
-                view.showMessage(view.MORE_MESSAGE + currentAnswer);
-                view.showMessage(view.INIT_MESSAGE + model.getMinRange() + " - " + model.getMaxRange());
+    private void lessOrMoreMessage() {
+        if (model.lessOrMore.equals(GlobalConstants.BIGGER_NUMBER)) {
+            view.showMessage(view.LESS_MESSAGE);
+        } else if (model.lessOrMore.equals(GlobalConstants.LESS_NUMBER)) {
+            view.showMessage(view.MORE_MESSAGE);
+        }
+    }
+
+
+    private int checkInput(Scanner sc) {
+        int currentAnswer = 0;
+        do {
+            view.showMessage(view.INIT_MESSAGE + view.SPACE_SIGN + model.getMinRange() + view.SPACE_SIGN + view.DASH_SIGN + view.SPACE_SIGN + model.getMaxRange() + view.SPACE_SIGN + view.INCLUSIVE_OR_NOT);
+            while (!sc.hasNextInt()) {
+                view.showMessage(view.NOT_A_NUMBER_MESSAGE);
+                view.showMessage(view.INIT_MESSAGE + view.SPACE_SIGN + model.getMinRange() + view.SPACE_SIGN + view.DASH_SIGN + view.SPACE_SIGN + model.getMaxRange() + view.SPACE_SIGN + view.INCLUSIVE_OR_NOT);
+                sc.next();
             }
-        }
-
-        view.showMessage(view.WINNING_MESSAGE + currentAnswer);
-        model.gameHistory(currentAnswer);
+            currentAnswer = sc.nextInt();
+        } while (currentAnswer > model.getMaxRange() || currentAnswer < model.getMinRange());
+        return currentAnswer;
     }
-
-    private int inputValue(Scanner sc) {
-        while (!sc.hasNextInt()) {
-            view.showMessage(view.NOT_A_NUMBER_MESSAGE);
-            view.showMessage(view.INIT_MESSAGE + model.getMinRange() + " - " + model.getMaxRange());
-            sc.next();
-        }
-        return sc.nextInt();
-    }
-
-
 }
-
