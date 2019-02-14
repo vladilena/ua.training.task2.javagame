@@ -3,7 +3,6 @@
  * @since 09/02/2019
  */
 public class View {
-    //  public final String START_THE_GAME = "You must guess the number in range from 0 to 100!";
     public final String SPACE_SIGN = " ";
     public final String DASH_SIGN = "-";
     public final String INIT_MESSAGE = "Input the number in range";
@@ -14,6 +13,10 @@ public class View {
     public final String HISTORY = "Your game history is";
     public final String INCLUSIVE_OR_NOT = "(non-inclusive)";
     public final String START_GAME = "In this game you must guess the number. Program will help you with prompts 'less' or 'bigger'";
+    public final String INPUT_RANGES = "Please, input the range:";
+    public final String FROM = "from";
+    public final String TO = "to";
+
 
     public void showMessage(String message) {
         System.out.println(message);

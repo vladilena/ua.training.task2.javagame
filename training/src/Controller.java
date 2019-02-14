@@ -20,8 +20,7 @@ public class Controller {
     public void runTheGame() {
         Scanner sc = new Scanner(System.in);
         view.showMessage(view.START_GAME);
-        model.setMinRange(GlobalConstants.INITIAL_MIN);
-        model.setMaxRange(GlobalConstants.INITIAL_MAX);
+        inputRanges(sc);
         model.createRightAnswer();
         while (model.gameLogic(checkInput(sc))) {
             lessOrMoreMessage();
@@ -30,6 +29,31 @@ public class Controller {
         view.showMessage(view.HISTORY + view.SPACE_SIGN + model.gameHistory);
     }
 
+    private void inputRanges(Scanner sc) {
+        view.showMessage(view.INPUT_RANGES);
+        int firstRange = 0;
+        int secondRange = 0;
+        view.showMessage(view.FROM);
+        while (!sc.hasNextInt()) {
+            view.showMessage(view.NOT_A_NUMBER_MESSAGE);
+            sc.next();
+        }
+        firstRange = sc.nextInt();
+        view.showMessage(view.TO);
+        while (!sc.hasNextInt()) {
+            view.showMessage(view.NOT_A_NUMBER_MESSAGE);
+            sc.next();
+        }
+        secondRange = sc.nextInt();
+        if (secondRange > firstRange) {
+            model.setMinRange(firstRange);
+            model.setMaxRange(secondRange);
+        } else if (secondRange < firstRange) {
+            model.setMaxRange(firstRange);
+            model.setMinRange(secondRange);
+        }
+
+    }
 
     private void lessOrMoreMessage() {
         if (model.lessOrMore.equals(GlobalConstants.BIGGER_NUMBER)) {
@@ -54,3 +78,5 @@ public class Controller {
         return currentAnswer;
     }
 }
+
+
